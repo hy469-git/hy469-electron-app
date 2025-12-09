@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Test Dashboard</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            flex: 1;
+        }
+
+        #logs {
+            height: 200px;
+            overflow-y: scroll;
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-top: 20px;
+            background: #f9f9f9;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Instructor Test Dashboard</h1>
+    <div class="container">
+        <div class="box">
+            <h2>MQTT</h2>
+            <p>Status: <span id="mqtt-status">Unknown</span></p>
+            <input type="text" id="mqtt-msg" placeholder="Message">
+            <button onclick="sendMqtt()">Publish</button>
+        </div>
+        <div class="box">
+            <h2>Socket.io</h2>
+            <p>Status: <span id="socket-status">Unknown</span></p>
+            <input type="text" id="socket-msg" placeholder="Message">
+            <button onclick="sendSocket()">Send</button>
+        </div>
+    </div>
+
+    <div id="logs"></div>
+
+    <script>
+        function log(msg) {
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            document.getElementById('logs').prepend(div);
+        }
+
+        if (window.api) {
+            log("Electron API detected.");
+
+            // MQTT Listeners
+            window.api.receive("mqtt-message", (msg) => {
+                log(`MQTT Received: ${msg}`);
+            });
+
+            // Socket Listeners (Internal)
+            window.api.receive("message", (msg) => {
+                log(`Socket Received: ${JSON.stringify(msg)}`);
+            });
+
+        } else {
+            log("Electron API NOT detected. Are you running inside Electron?");
+        }
+
+        function sendMqtt() {
+            const msg = document.getElementById('mqtt-msg').value;
+            if (window.api) {
+                window.api.send("mqtt-publish", msg);
+                log(`MQTT Sent: ${msg}`);
+            } else {
+                log("Error: API not available");
+            }
+        }
+
+        function sendSocket() {
+            const msg = document.getElementById('socket-msg').value;
+            if (window.api) {
+                const payload = { text: msg };
+                window.api.send("message", payload);
+                log(`Socket Sent: ${JSON.stringify(payload)}`);
+            } else {
+                log("Error: API not available");
+            }
+        }
+    </script>
+</body>
+
+</html>

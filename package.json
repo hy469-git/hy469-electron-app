@@ -1,0 +1,39 @@
+{
+    "name": "electron_launcher",
+    "productName": "electron_launcher",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./src/main.js",
+    "scripts": {
+        "start": "cd ./src && electron main.js",
+        "build": "npm run build",
+        "build_start": "npm run build && npm run start",
+        "package_windows": "electron-packager ./ electronLauncher --platform=win32 --arch=x64 --overwrite "
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.1",
+        "http-server": "^14.1.1",
+        "mqtt": "^5.3.4",
+        "rxjs": "~7.4.0",
+        "socket.io": "^4.4.0",
+        "socket.io-client": "^4.4.0",
+        "tslib": "^2.8.1",
+        "zone.js": "~0.11.4"
+    },
+    "devDependencies": {
+        "electron": "^37.2.1",
+        "electron-packager": "^17.1.2"
+    },
+    "build": {
+        "extraResources": [
+            "./*.json",
+            "src/electron-app/resources/*"
+        ],
+        "files": [
+            "**/*",
+            "config.json"
+        ]
+    }
+}

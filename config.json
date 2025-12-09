@@ -1,0 +1,8 @@
+{
+    "frontend_ip": "file:///C:/Users/ngiov/Desktop/469example/_instructor_resources/index.html",
+    "socket_url": "http://localhost:3301",
+    "mqtt_topic": "pc2",
+    "mqtt_broker": "mqtt://test.mosquitto.org",
+    "enable_socket": true,
+    "enable_mqtt": true
+}
